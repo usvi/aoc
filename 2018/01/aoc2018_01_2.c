@@ -57,7 +57,6 @@ static int sl_add(sorted_list* px_param_sl, int i_param_value)
   int i_part_start = 0;
   int i_part_end = px_param_sl->i_elements_count;
   int i_part_middle = (i_part_start + i_part_end) / 2;
-  int i = 0;
 
   while (i_part_middle != i_part_start)
   {
@@ -163,7 +162,6 @@ int main(void)
   }
   fclose(px_file);
   sl_free(&x_list);
-  printf(">%d\n", i_sum);
 
   return 0;
 }
