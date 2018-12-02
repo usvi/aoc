@@ -81,7 +81,7 @@ static int sl_add(sorted_list* px_param_sl, int i_param_value)
     }
   }
   // Lets see if we should actually be on one more right
-  if (i_param_value > px_param_sl->ai_values[i_part_middle])
+  if (px_param_sl->i_elements_count && (i_param_value > px_param_sl->ai_values[i_part_middle]))
   {
     i_part_middle++;
   }
