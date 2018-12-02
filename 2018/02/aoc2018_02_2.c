@@ -61,9 +61,6 @@ static int dl_add(dumb_list* px_param_list, char* s_param_id, char* s_result_buf
   // Check if have storage space
   if (px_param_list->i_storage_size == px_param_list->i_elements_count)
   {
-    //#define ID_LEN (26)
-    //#define DL_INCREMENT (100)
-
     // Reallocate (original + increment) * size of one id
     p_malloc_test = realloc(px_param_list->as_ids,
 			    (px_param_list->i_storage_size + DL_INCREMENT) * i_id_size);
@@ -81,7 +78,6 @@ static int dl_add(dumb_list* px_param_list, char* s_param_id, char* s_result_buf
 
   for (i_pos = 0; i_pos < px_param_list->i_elements_count; i_pos++)
   {
-    //printf("%s ", px_param_list->as_ids + (i_id_size * i_pos));
     if (calc_id_diffs((px_param_list->as_ids + (i_id_size * i_pos)),
 		      s_param_id) == 1)
     {
