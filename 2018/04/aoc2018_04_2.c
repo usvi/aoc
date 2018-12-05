@@ -181,30 +181,20 @@ static void ssf_process_sleeps(sorted_sleep_file* px_param_file)
 	for (i_pos2 = i_sleep_start; i_pos2 < i_sleep_end; i_pos2++)
 	{
 	  px_guard_pointer->ai_minutes[i_pos2]++;
-	}
-	if (px_guard_pointer->i_total_sleep > i_max_sleeps)
-	{
-	  px_sleepiest_guard = px_guard_pointer;
-	  i_max_sleeps = px_guard_pointer->i_total_sleep;
+
+	  if (px_guard_pointer->ai_minutes[i_pos2] > i_max_sleeps)
+	  {
+	    i_max_sleeps = px_guard_pointer->ai_minutes[i_pos2];
+	    i_sleepiest_minute = i_pos2;
+	    px_sleepiest_guard = px_guard_pointer;
+	  }
 	}
       }
     }
   }
-  // Sleepiest guard is as pointer in px_sleepiest_guard
-  // iterate over sleep map and figure out most sleepy minute
-  i_max_sleeps = 0;
-
-  for (i_pos = 0; i_pos < 60; i_pos++)
-  {
-    if (px_sleepiest_guard->ai_minutes[i_pos] > i_max_sleeps)
-    {
-      i_max_sleeps = px_sleepiest_guard->ai_minutes[i_pos];
-      i_sleepiest_minute = i_pos;
-    }
-  }
-  printf("Guard %d had sleepiest minute %d resulting in answer %d\n",
-	 px_sleepiest_guard->i_guard_id, i_sleepiest_minute,
-	 (px_sleepiest_guard->i_guard_id * i_sleepiest_minute));
+  printf("Sleepiest minute %d guard was %d  resulting in answer %d\n",
+	 i_sleepiest_minute, px_sleepiest_guard->i_guard_id,
+	 (i_sleepiest_minute * px_sleepiest_guard->i_guard_id));
 
   free(px_guard_sleeps);
 }
@@ -217,8 +207,6 @@ int main(void)
   sorted_sleep_file x_sleep_file;
 
   FILE* px_file = fopen("input_aoc2018_04_1.txt", "r");
-  //FILE* px_file = fopen("input.txt", "r");
-
 
   if (px_file == NULL)
   {
