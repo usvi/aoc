@@ -88,18 +88,34 @@ static void pol_react(polymer_type* px_param_polymer)
 static int i_pol_reduce(polymer_type* px_param_polymer)
 {
   int i_pos = 0;
+  int i_pos2 = 0;
   int i_reductions = 0;
+  int i_consecutive_empties = 0;
 
   for (i_pos = 0; i_pos < px_param_polymer->i_elements; i_pos++)
   {
     // If we find empty chars, move to left and zero tail
     if (px_param_polymer->s_units[i_pos] == POL_EMPTY_UNIT)
     {
+      i_consecutive_empties = 0;
+      // Actually, check how many consecutive empties there are
+
+      for (i_pos2 = i_pos; i_pos2 < px_param_polymer->i_elements; i_pos2++)
+      {
+	if (px_param_polymer->s_units[i_pos2] == POL_EMPTY_UNIT)
+	{
+	  i_consecutive_empties++;
+	}
+	else
+	{
+	  break;
+	}
+      }
       memmove((px_param_polymer->s_units + i_pos),
-	      (px_param_polymer->s_units + i_pos + 1),
-	      (px_param_polymer->i_elements - i_pos - 1));
-      px_param_polymer->i_elements--;
-      memset((px_param_polymer->s_units + px_param_polymer->i_elements), 0, 1);
+	      (px_param_polymer->s_units + i_pos + i_consecutive_empties),
+	      (px_param_polymer->i_elements - i_pos - i_consecutive_empties));
+      px_param_polymer->i_elements -= i_consecutive_empties;
+      memset((px_param_polymer->s_units + px_param_polymer->i_elements), 0, i_consecutive_empties);
       i_reductions = 1;
     }
   }
