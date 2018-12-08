@@ -102,20 +102,37 @@ static tree_node* px_tn_get_nodes(FILE* px_param_file)
 }
 
 
-static int i_tn_count_checksum(tree_node* px_param_node)
+static int i_tn_count_value(tree_node* px_param_node)
 {
   int i_retsum = 0;
   int i_pos = 0;
 
-  // Count first local checksum
+  // "If a node has no child nodes, its value is
+  // the sum of its metadata entries."
+
+  if (px_param_node->i_num_children == 0)
+  {
+    for (i_pos = 0; i_pos < px_param_node->i_num_meta; i_pos++)
+    {
+      i_retsum += px_param_node->ai_meta[i_pos];
+    }
+    
+    return i_retsum;
+  }
+  // "However, if a node does have child nodes,
+  // the metadata entries become indexes which
+  // refer to those child nodes."
+
   for (i_pos = 0; i_pos < px_param_node->i_num_meta; i_pos++)
   {
-    i_retsum += px_param_node->ai_meta[i_pos];
-  }
-  // Then get sums from children
-  for (i_pos = 0; i_pos < px_param_node->i_num_children; i_pos++)
-  {
-    i_retsum += i_tn_count_checksum(px_param_node->apx_children[i_pos]);
+    // "A metadata entry of 1 refers to the first
+    // child node, 2 to the second, 3 to the third, and so on."
+
+    if (((px_param_node->ai_meta[i_pos] - 1) >= 0) && 
+	((px_param_node->ai_meta[i_pos] - 1) < px_param_node->i_num_children))
+    {
+      i_retsum += i_tn_count_value(px_param_node->apx_children[px_param_node->ai_meta[i_pos] - 1]);
+    }
   }
 
   return i_retsum;
@@ -127,6 +144,7 @@ static void tn_free_node(tree_node* px_param_node)
   int i_pos = 0;
 
   // First free children
+
   for (i_pos = 0; i_pos < px_param_node->i_num_children; i_pos++)
   {
     tn_free_node(px_param_node->apx_children[i_pos]);
@@ -152,7 +170,7 @@ int main(void)
     return 0;
   }
   px_tree = px_tn_get_nodes(px_file);
-  printf("Final checksum was %d\n", i_tn_count_value(px_tree));
+  printf("Final value was %d\n", i_tn_count_value(px_tree));
   tn_free_node(px_tree);
   fclose(px_file);
   

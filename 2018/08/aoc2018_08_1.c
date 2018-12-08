@@ -152,7 +152,7 @@ int main(void)
     return 0;
   }
   px_tree = px_tn_get_nodes(px_file);
-  printf("Final checsum was %d\n", i_tn_count_checksum(px_tree));
+  printf("Final checksum was %d\n", i_tn_count_checksum(px_tree));
   tn_free_node(px_tree);
   fclose(px_file);
   
