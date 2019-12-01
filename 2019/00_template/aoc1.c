@@ -28,7 +28,6 @@ int main()
     u32TotalSum += u32ProcessLine(u32LineInput);
   }
   fclose(pxFile);
-
   printf(">%u\n", u32TotalSum);
 
   return 0;
