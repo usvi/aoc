@@ -17,7 +17,7 @@ int64_t i64ProcessLine(int64_t i64ParamLine)
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
   char sLineBuf[LINE_BUF_SIZE] = { 0 };
   int64_t i64LineInput = 0;

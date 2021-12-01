@@ -3,20 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 
 
-
-uint32_t u32ProcessLine(uint32_t u32ParamLine)
+int64_t i64ProcessLine(int64_t i64ParamLine)
 {
-  return u32ParamLine;
+  return i64ParamLine;
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
   char sLineBuf[LINE_BUF_SIZE] = { 0 };
-  uint32_t u32TotalSum = 0;
-  uint32_t u32LineInput = 0;
+  int64_t i64TotalSum = 0;
+  int64_t i64LineInput = 0;
 
   FILE* pxFile = fopen("input.txt", "r");
 
@@ -26,11 +26,11 @@ int main()
   }
   while(fgets(sLineBuf, sizeof(sLineBuf) , pxFile) != NULL)
   {
-    u32LineInput = atoi(sLineBuf);
-    u32TotalSum += u32ProcessLine(u32LineInput);
+    i64LineInput = atoll(sLineBuf);
+    i64TotalSum += i64ProcessLine(i64LineInput);
   }
   fclose(pxFile);
-  printf(">%u\n", u32TotalSum);
+  printf(">%" PRIi64 "\n", i64TotalSum);
 
   return 0;
 }
