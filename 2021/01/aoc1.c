@@ -3,22 +3,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 
 
 
-uint32_t u32ProcessLine(uint32_t u32ParamLine)
+static int64_t i64ProcessLine(int64_t i64ParamLine);
+
+
+
+int64_t i64ProcessLine(int64_t i64ParamLine)
 {
-  return u32ParamLine;
+  return i64ParamLine;
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
   char sLineBuf[LINE_BUF_SIZE] = { 0 };
-  uint32_t u32LineInput = 0;
-  uint32_t u32Prev = 0;
-  uint32_t u32Increases = 0;
-
+  int64_t i64LineInput = 0;
+  int64_t i64Prev = 0;
+  uint64_t u64Increases = 0;
   
   FILE* pxFile = fopen("input.txt", "r");
 
@@ -28,22 +32,25 @@ int main()
   }
   while(fgets(sLineBuf, sizeof(sLineBuf) , pxFile) != NULL)
   {
-    u32LineInput = atoi(sLineBuf);
+    i64LineInput = atoll(sLineBuf);
+    i64LineInput = i64ProcessLine(i64LineInput);
 
-    if (u32LineInput > u32Prev)
+    //printf("Comparing this: %" PRIi64 " and prev %" PRIi64 "\n", i64LineInput, i64Prev);
+    
+    if (i64LineInput > i64Prev)
     {
-      u32Increases++;
+      u64Increases++;
     }
-    u32Prev = u32LineInput;
+    i64Prev = i64LineInput;
   }
   fclose(pxFile);
 
   // First is not counted
-  if (u32Increases > 0)
+  if (u64Increases > 0)
   {
-    u32Increases--;
+    u64Increases--;
   }
-  printf(">%u\n", u32Increases);
+  printf(">%" PRIu64 "\n", u64Increases);
 
   return 0;
 }

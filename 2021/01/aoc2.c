@@ -3,25 +3,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 
 
 
-uint32_t u32ProcessLine(uint32_t u32ParamLine)
+static int64_t i64ProcessLine(int64_t i64ParamLine);
+
+
+
+int64_t i64ProcessLine(int64_t i64ParamLine)
 {
-  return u32ParamLine;
+  return i64ParamLine;
 }
 
 
 int main()
 {
   char sLineBuf[LINE_BUF_SIZE] = { 0 };
-  uint32_t u32LineInput = 0;
-  uint32_t u32PrevWindow = 0;
-  uint32_t u32ThisWindow = 0;
-  uint32_t u32Increases = 0;
-  uint32_t au32Numbers[4] = {0};
-  uint32_t u32LineNum = 0;
-  uint32_t u32LineIndex = 0;
+  int64_t i64LineInput = 0;
+  int64_t i64PrevWindow = 0;
+  int64_t i64ThisWindow = 0;
+  uint64_t u64Increases = 0;
+  int64_t ai64Numbers[4] = {0};
+  uint64_t u64LineNum = 0;
+  uint64_t u64LineIndex = 0;
   
   FILE* pxFile = fopen("input.txt", "r");
 
@@ -32,36 +37,37 @@ int main()
   
   while(fgets(sLineBuf, sizeof(sLineBuf) , pxFile) != NULL)
   {
-    u32LineInput = atoi(sLineBuf);
-    u32LineIndex = u32LineNum % 4;
+    i64LineInput = atoll(sLineBuf);
+    i64LineInput = i64ProcessLine(i64LineInput);
+    
+    u64LineIndex = u64LineNum % 4;
+    ai64Numbers[u64LineIndex] = i64LineInput;
 
-    au32Numbers[u32LineIndex] = u32LineInput;
-
-    if (u32LineNum >= 3)
+    if (u64LineNum >= 3)
     {
       // Actual counts
-      u32PrevWindow =
-	au32Numbers[(u32LineIndex + 4 - 1) % 4] +
-	au32Numbers[(u32LineIndex + 4 - 2) % 4] +
-	au32Numbers[(u32LineIndex + 4 - 3) % 4];
+      i64PrevWindow =
+	ai64Numbers[(u64LineIndex + 4 - 1) % 4] +
+	ai64Numbers[(u64LineIndex + 4 - 2) % 4] +
+	ai64Numbers[(u64LineIndex + 4 - 3) % 4];
 
-      u32ThisWindow =
-	au32Numbers[(u32LineIndex + 4 - 0) % 4] +
-	au32Numbers[(u32LineIndex + 4 - 1) % 4] +
-	au32Numbers[(u32LineIndex + 4 - 2) % 4];
+      i64ThisWindow =
+	ai64Numbers[(u64LineIndex + 4 - 0) % 4] +
+	ai64Numbers[(u64LineIndex + 4 - 1) % 4] +
+	ai64Numbers[(u64LineIndex + 4 - 2) % 4];
 
-      //printf(">Prev: %u  This %u\n", u32PrevWindow, u32ThisWindow);
+      //printf(">Prev: %" PRIi64  "  This %" PRIi64 "\n", i64PrevWindow, i64ThisWindow);
 
-      if (u32ThisWindow > u32PrevWindow)
+      if (i64ThisWindow > i64PrevWindow)
       {
-	u32Increases++;
+	u64Increases++;
       }
     }
-    u32LineNum++;
+    u64LineNum++;
   }
   fclose(pxFile);
 
-  printf(">%u\n", u32Increases);
+  printf(">%" PRIu64 "\n", u64Increases);
 
   return 0;
 }
