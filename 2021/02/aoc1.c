@@ -1,0 +1,48 @@
+#include "aoc.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <string.h>
+
+
+int main(int argc, char *argv[])
+{
+  char sLineBuf[LINE_BUF_SIZE] = { 0 };
+  int64_t i64LineInput = 0;
+
+  int64_t i64Forward = 0;
+  int64_t i64Depth = 0;
+
+  FILE* pxFile = fopen("input.txt", "r");
+
+  if (pxFile == NULL)
+  {
+    return 1;
+  }
+  while(fgets(sLineBuf, sizeof(sLineBuf) , pxFile) != NULL)
+  {
+    if (strstr(sLineBuf, "forward") == sLineBuf)
+    {
+      i64LineInput = atoll(strstr(sLineBuf, " ") + 1);
+      i64Forward += i64LineInput;
+    }
+    else if (strstr(sLineBuf, "down") == sLineBuf)
+    {
+      i64LineInput = atoll(strstr(sLineBuf, " ") + 1);
+      i64Depth += i64LineInput;
+    }
+    else if (strstr(sLineBuf, "up") == sLineBuf)
+    {
+      i64LineInput = atoll(strstr(sLineBuf, " ") + 1);
+      i64Depth -= i64LineInput;
+    }
+    
+  }
+  fclose(pxFile);
+
+  printf(">%" PRIi64 "  %" PRIi64 "  %" PRIi64 "\n", i64Forward, i64Depth, (i64Forward * i64Depth));
+
+  return 0;
+}
